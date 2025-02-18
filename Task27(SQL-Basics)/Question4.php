@@ -14,79 +14,70 @@ try {
     echo "Connected successfully";  // Message if connection works=
 
 
-
-    // try {
-    //     $stmt = $pdo->query("SELECT * FROM Students"); // Replace "Students" with your table name
-
-    //     while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
-    //         echo "ID: " . $row['student_id'] . " - Name: " . $row['first_name'] . " " . $row['last_name'] . "<br>";
-    //     }
-    // } catch (PDOException $e) {
-    //     echo "Query failed: " . $e->getMessage();
-    // }
-
-    // try {
-    //     $sql = "INSERT INTO Students (first_name, last_name, email, date_of_birth, gender, major, enrollment_year) 
-    //             VALUES (:first_name, :last_name, :email, :dob, :gender, :major, :enrollment_year)";
-
-    //     $stmt = $pdo->prepare($sql);
-
-    //     // Bind parameters
-    //     $stmt->execute([
-    //         ':first_name' => 'erkhberhkberjk',
-    //         ':last_name' => 'erfkjnrefjkrenkj',
-    //         ':email' => 'john@example.com',
-    //         ':dob' => '2000-05-10',
-    //         ':gender' => 'Male',
-    //         ':major' => 'Computer Science',
-    //         ':enrollment_year' => 2023
-    //     ]);
-
-    //     echo "Student inserted successfully!";
-    // } catch (PDOException $e) {
-    //     echo "Insert failed: " .$e->getMessage();
-    // }
-
-
-    echo "<h3>All Students:</h3>";
-    $stmt = $pdo->query("SELECT * FROM Students");
+    // 5. List all courses along with the number of students enrolled
+    echo "<h3>Courses with Number of Students Enrolled:</h3>";
+    $stmt = $pdo->query("
+        SELECT C.course_name, COUNT(E.student_id) AS student_count
+        FROM Courses C
+        LEFT JOIN Enrollments E ON C.course_id = E.course_id
+        GROUP BY C.course_id, C.course_name
+    ");
     while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
-        echo "{$row['student_id']} - {$row['first_name']} {$row['last_name']} - {$row['email']} - {$row['major']}<br>";
+        echo "{$row['course_name']} - Enrolled Students: {$row['student_count']}<br>";
     }
 
-    // 2. Find the total number of courses offered
-    echo "<h3>Total Number of Courses:</h3>";
-    $stmt = $pdo->query("SELECT COUNT(*) AS total_courses FROM Courses");
-    $row = $stmt->fetch(PDO::FETCH_ASSOC);
-    echo "Total Courses: {$row['total_courses']}<br>";
-
-    // 3. Show students enrolled in a specific course (Change 'Frontend Development' if needed)
-    $course_name = "Frontend Development";
-    echo "<h3>Students Enrolled in $course_name:</h3>";
-    $stmt = $pdo->prepare("
-        SELECT S.first_name, S.last_name
+    // 6. Find the students who were enrolled in a course with a grade of 'A'
+    echo "<h3>Students with Grade 'A':</h3>";
+    $stmt = $pdo->query("
+        SELECT S.first_name, S.last_name, C.course_name
         FROM Students S
         JOIN Enrollments E ON S.student_id = E.student_id
         JOIN Courses C ON E.course_id = C.course_id
+        WHERE E.grade = 'A'
+    ");
+    while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+        echo "{$row['first_name']} {$row['last_name']} - Course: {$row['course_name']}<br>";
+    }
+
+    // 7. Retrieve courses and instructors assigned for a specific semester
+    $semester = "Spring";
+    $year = 2025;
+    echo "<h3>Courses & Instructors for $semester $year:</h3>";
+    $stmt = $pdo->prepare("
+        SELECT C.course_name, I.first_name, I.last_name
+        FROM Courses C
+        JOIN CourseAssignments CA ON C.course_id = CA.course_id
+        JOIN Instructors I ON CA.instructor_id = I.instructor_id
+        WHERE CA.semester = :semester AND CA.year = :year
+    ");
+    $stmt->execute(['semester' => $semester, 'year' => $year]);
+    while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+        echo "Course: {$row['course_name']} - Instructor: {$row['first_name']} {$row['last_name']}<br>";
+    }
+
+    // 8. Find the average grade for a particular course (Example: 'Frontend Development')
+    $course_name = "Frontend Development";
+    echo "<h3>Average Grade for $course_name:</h3>";
+    $stmt = $pdo->prepare("
+        SELECT C.course_name, AVG(CASE 
+            WHEN E.grade = 'A' THEN 4.0 
+            WHEN E.grade = 'B' THEN 3.0 
+            WHEN E.grade = 'C' THEN 2.0 
+            WHEN E.grade = 'D' THEN 1.0 
+            WHEN E.grade = 'F' THEN 0.0 
+            ELSE NULL END) AS average_gpa
+        FROM Courses C
+        JOIN Enrollments E ON C.course_id = E.course_id
         WHERE C.course_name = :course_name
+        GROUP BY C.course_id, C.course_name
     ");
     $stmt->execute(['course_name' => $course_name]);
-    while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
-        echo "{$row['first_name']} {$row['last_name']}<br>";
+    $row = $stmt->fetch(PDO::FETCH_ASSOC);
+    if ($row && $row['average_gpa'] !== null) {
+        echo "Average GPA: " . round($row['average_gpa'], 2) . "<br>";
+    } else {
+        echo "No grades available for $course_name.<br>";
     }
-
-    // 4. Retrieve email addresses of instructors in a department (Change 'Web Development' if needed)
-    $department_name = "Web Development";
-    echo "<h3>Instructor Emails in $department_name:</h3>";
-    $stmt = $pdo->prepare("SELECT first_name, last_name, email FROM Instructors WHERE department = :department");
-    $stmt->execute(['department' => $department_name]);
-    while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
-        echo "{$row['first_name']} {$row['last_name']} - {$row['email']}<br>";
-    }
-
-
-
-    
 } catch (PDOException $e) {
     echo "Connection failed: " . $e->getMessage();
 }
