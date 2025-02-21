@@ -36,14 +36,16 @@ INSERT INTO CourseAssignments (instructor_id, course_id, semester, year) VALUES
 (5, 5, 'Spring', 2025);
 
 -- Enroll Each Student in at Least 2 Random Courses
+-- INSERT INTO Enrollments (student_id, course_id, grade) VALUES
 INSERT INTO Enrollments (student_id, course_id, grade) VALUES
-(1, 1, NULL), (1, 3, NULL),
-(2, 2, NULL), (2, 4, NULL),
-(3, 3, NULL), (3, 5, NULL),
-(4, 1, NULL), (4, 5, NULL),
-(5, 2, NULL), (5, 3, NULL),
-(6, 1, NULL), (6, 4, NULL),
-(7, 2, NULL), (7, 5, NULL),
-(8, 3, NULL), (8, 4, NULL),
-(9, 1, NULL), (9, 2, NULL),
-(10, 4, NULL), (10, 5, NULL);
+(1, 1, FLOOR(1 + (RAND() * 100))), (1, 3, FLOOR(1 + (RAND() * 100))),
+(2, 2, FLOOR(1 + (RAND() * 100))), (2, 4, FLOOR(1 + (RAND() * 100))),
+(3, 3, FLOOR(1 + (RAND() * 100))), (3, 5, FLOOR(1 + (RAND() * 100))),
+(4, 1, FLOOR(1 + (RAND() * 100))), (4, 5, FLOOR(1 + (RAND() * 100))),
+(5, 2, FLOOR(1 + (RAND() * 100))), (5, 3, FLOOR(1 + (RAND() * 100))),
+(6, 1, FLOOR(1 + (RAND() * 100))), (6, 4, FLOOR(1 + (RAND() * 100))),
+(7, 2, FLOOR(1 + (RAND() * 100))), (7, 5, FLOOR(1 + (RAND() * 100))),
+(8, 3, FLOOR(1 + (RAND() * 100))), (8, 4, FLOOR(1 + (RAND() * 100))),
+(9, 1, FLOOR(1 + (RAND() * 100))), (9, 2, FLOOR(1 + (RAND() * 100))),
+(10, 4, FLOOR(1 + (RAND() * 100))), (10, 5, FLOOR(1 + (RAND() * 100)));
+

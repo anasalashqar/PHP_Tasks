@@ -14,53 +14,22 @@ try {
     echo "Connected successfully";  // Message if connection works=
 
 
-
-    // try {
-    //     $stmt = $pdo->query("SELECT * FROM Students"); // Replace "Students" with your table name
-
-    //     while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
-    //         echo "ID: " . $row['student_id'] . " - Name: " . $row['first_name'] . " " . $row['last_name'] . "<br>";
-    //     }
-    // } catch (PDOException $e) {
-    //     echo "Query failed: " . $e->getMessage();
-    // }
-
-    // try {
-    //     $sql = "INSERT INTO Students (first_name, last_name, email, date_of_birth, gender, major, enrollment_year) 
-    //             VALUES (:first_name, :last_name, :email, :dob, :gender, :major, :enrollment_year)";
-
-    //     $stmt = $pdo->prepare($sql);
-
-    //     // Bind parameters
-    //     $stmt->execute([
-    //         ':first_name' => 'erkhberhkberjk',
-    //         ':last_name' => 'erfkjnrefjkrenkj',
-    //         ':email' => 'john@example.com',
-    //         ':dob' => '2000-05-10',
-    //         ':gender' => 'Male',
-    //         ':major' => 'Computer Science',
-    //         ':enrollment_year' => 2023
-    //     ]);
-
-    //     echo "Student inserted successfully!";
-    // } catch (PDOException $e) {
-    //     echo "Insert failed: " .$e->getMessage();
-    // }
-
-
+    // 1
     echo "<h3>All Students:</h3>";
     $stmt = $pdo->query("SELECT * FROM Students");
     while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
         echo "{$row['student_id']} - {$row['first_name']} {$row['last_name']} - {$row['email']} - {$row['major']}<br>";
     }
 
-    // 2. Find the total number of courses offered
+
+    // 2
     echo "<h3>Total Number of Courses:</h3>";
     $stmt = $pdo->query("SELECT COUNT(*) AS total_courses FROM Courses");
     $row = $stmt->fetch(PDO::FETCH_ASSOC);
     echo "Total Courses: {$row['total_courses']}<br>";
 
-    // 3. Show students enrolled in a specific course (Change 'Frontend Development' if needed)
+
+    // 3
     $course_name = "Frontend Development";
     echo "<h3>Students Enrolled in $course_name:</h3>";
     $stmt = $pdo->prepare("
@@ -75,7 +44,8 @@ try {
         echo "{$row['first_name']} {$row['last_name']}<br>";
     }
 
-    // 4. Retrieve email addresses of instructors in a department (Change 'Web Development' if needed)
+
+    // 4
     $department_name = "Web Development";
     echo "<h3>Instructor Emails in $department_name:</h3>";
     $stmt = $pdo->prepare("SELECT first_name, last_name, email FROM Instructors WHERE department = :department");
@@ -85,8 +55,6 @@ try {
     }
 
 
-
-    
 } catch (PDOException $e) {
     echo "Connection failed: " . $e->getMessage();
 }

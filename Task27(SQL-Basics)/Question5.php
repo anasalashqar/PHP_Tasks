@@ -14,13 +14,14 @@ try {
     echo "Connected successfully";  // Message if connection works=
 
     // 5. List all courses along with the number of students enrolled
-    echo "<h3>Courses with Number of Students Enrolled:</h3>";
+    echo "<h3>Students that have more than three courses:</h3>";
     $stmt = $pdo->query("
         SELECT C.course_name, COUNT(E.student_id) AS student_count
         FROM Courses C
         LEFT JOIN Enrollments E ON C.course_id = E.course_id
         GROUP BY C.course_id, C.course_name
     ");
+   
     while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
         echo "{$row['course_name']} - Enrolled Students: {$row['student_count']}<br>";
     }
@@ -34,8 +35,13 @@ try {
         JOIN Courses C ON E.course_id = C.course_id
         WHERE E.grade = 'A'
     ");
-    while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
-        echo "{$row['first_name']} {$row['last_name']} - Course: {$row['course_name']}<br>";
+    // while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+    //     echo "{$row['first_name']} {$row['last_name']} - Course: {$row['course_name']}<br>";
+    // }
+     while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+        echo "<pre>";  // Preformatted text for better readability
+        print_r($row); // Prints all columns and values in the row
+        echo "</pre>";
     }
 
     // 7. Retrieve courses and instructors assigned for a specific semester
