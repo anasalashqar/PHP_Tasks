@@ -56,7 +56,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['action']) && $_POST['a
             alert('Record updated successfully.');
             setTimeout(function() {
                 window.location.href = 'form.php';
-            }, 2000); // Redirect after 2 seconds
+            }, 500); // Redirect after 2 seconds
           </script>";
         } else {
             echo "Error updating student record.";

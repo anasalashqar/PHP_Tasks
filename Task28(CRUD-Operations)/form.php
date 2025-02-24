@@ -12,16 +12,13 @@
 <body>
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
         <div class="container-fluid">
-
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
             <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
                 <div class="navbar-nav">
                     <a class="nav-link" href="./create.php">Create</a>
-
                     <a class="nav-link" href="./form.php">Delete & Edit</a>
-
                 </div>
             </div>
         </div>
@@ -91,6 +88,8 @@ try {
 
     $stmt = $pdo->query("SELECT * FROM Students WHERE deleted_at IS NULL");
     $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    
+    
 
     foreach ($rows as $row) {
         echo "<tr>
@@ -217,7 +216,7 @@ try {
         }
 
         echo "<script>window.location.href='form.php';</script>"; // Refresh the page
-        // Refresh page
+      
         exit;
 
 
